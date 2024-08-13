@@ -50,3 +50,14 @@ func (ident *Identifier) expressionNode() {}
 func (ident *Identifier) TokenLiteral() string {
 	return ident.Token.Literal
 }
+
+// LetStatment
+type ReturnStatement struct {
+	Value Expression
+	Token token.Token
+}
+
+func (stmt *ReturnStatement) statementNode() {}
+func (stmt *ReturnStatement) TokenLiteral() string {
+	return stmt.Token.Literal
+}
