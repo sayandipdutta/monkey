@@ -57,7 +57,7 @@ func (stmt *LetStatment) String() string {
 
 	out.WriteString(stmt.TokenLiteral() + " ")
 	out.WriteString(stmt.Name.TokenLiteral() + " ")
-	out.WriteString(" = ")
+	out.WriteString("= ")
 	if stmt.Value != nil {
 		out.WriteString(stmt.Value.String())
 	}
@@ -105,7 +105,6 @@ func (stmt *ExpressionStatement) TokenLiteral() string { return stmt.Token.Liter
 func (stmt *ExpressionStatement) String() string {
 	var out bytes.Buffer
 
-	out.WriteString(stmt.TokenLiteral())
 	if stmt.Expression != nil {
 		out.WriteString(stmt.Expression.String())
 	}
