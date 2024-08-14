@@ -8,11 +8,18 @@ import (
 	"github.com/sayandipdutta/monkey/token"
 )
 
+type (
+	prefixParseFn func() ast.Expression
+	infixParseFn  func(ast.Expression) ast.Expression
+)
+
 type Parser struct {
-	lexer     *lexer.Lexer
-	currToken token.Token
-	peekToken token.Token
-	Errors    []string
+	lexer          *lexer.Lexer
+	prefixParseFns map[token.TokenType]prefixParseFn
+	infixParseFns  map[token.TokenType]infixParseFn
+	currToken      token.Token
+	peekToken      token.Token
+	Errors         []string
 }
 
 func New(lexer *lexer.Lexer) *Parser {
@@ -108,4 +115,12 @@ func (parser *Parser) currTokenIs(tok token.TokenType) bool {
 
 func (parser *Parser) peekTokenIs(tok token.TokenType) bool {
 	return parser.peekToken.Type == tok
+}
+
+func (parser *Parser) registerPrefixFn(tok token.TokenType, fn prefixParseFn) {
+	parser.prefixParseFns[tok] = fn
+}
+
+func (parser *Parser) registerInfixFn(tok token.TokenType, fn infixParseFn) {
+	parser.infixParseFns[tok] = fn
 }
