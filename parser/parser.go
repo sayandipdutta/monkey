@@ -45,7 +45,9 @@ func (p *Parser) ParseProgram() *ast.Program {
 
 	for p.currToken.Type != token.EOF {
 		stmt := p.parseStatement()
-		program.Statements = append(program.Statements, stmt)
+		if stmt != nil {
+			program.Statements = append(program.Statements, stmt)
+		}
 		p.nextToken()
 	}
 
