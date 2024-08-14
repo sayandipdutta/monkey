@@ -50,11 +50,8 @@ type LetStatment struct {
 	Token token.Token
 }
 
-func (stmt *LetStatment) statementNode() {}
-func (stmt *LetStatment) TokenLiteral() string {
-	return stmt.Token.Literal
-}
-
+func (stmt *LetStatment) statementNode()       {}
+func (stmt *LetStatment) TokenLiteral() string { return stmt.Token.Literal }
 func (stmt *LetStatment) String() string {
 	var out bytes.Buffer
 
@@ -74,32 +71,43 @@ type Identifier struct {
 	Value string
 }
 
-func (ident *Identifier) expressionNode() {}
-func (ident *Identifier) TokenLiteral() string {
-	return ident.Token.Literal
-}
+func (ident *Identifier) expressionNode()      {}
+func (ident *Identifier) TokenLiteral() string { return ident.Token.Literal }
+func (ident *Identifier) String() string       { return ident.Value }
 
-func (ident *Identifier) String() string {
-	return ident.Value
-}
-
-// LetStatment
+// ReturnStatement
 type ReturnStatement struct {
 	Value Expression
 	Token token.Token
 }
 
-func (stmt *ReturnStatement) statementNode() {}
-func (stmt *ReturnStatement) TokenLiteral() string {
-	return stmt.Token.Literal
-}
-
+func (stmt *ReturnStatement) statementNode()       {}
+func (stmt *ReturnStatement) TokenLiteral() string { return stmt.Token.Literal }
 func (stmt *ReturnStatement) String() string {
 	var out bytes.Buffer
 
 	out.WriteString(stmt.TokenLiteral())
 	if stmt.Value != nil {
 		out.WriteString(stmt.Value.String())
+	}
+	out.WriteString(";")
+	return out.String()
+}
+
+// ExpressionStatement
+type ExpressionStatement struct {
+	Expression Expression
+	Token      token.Token
+}
+
+func (stmt *ExpressionStatement) statementNode()       {}
+func (stmt *ExpressionStatement) TokenLiteral() string { return stmt.Token.Literal }
+func (stmt *ExpressionStatement) String() string {
+	var out bytes.Buffer
+
+	out.WriteString(stmt.TokenLiteral())
+	if stmt.Expression != nil {
+		out.WriteString(stmt.Expression.String())
 	}
 	out.WriteString(";")
 	return out.String()
