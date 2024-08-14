@@ -87,27 +87,27 @@ func (lexer *Lexer) NextToken() token.Token {
 			lexer.readChar()
 			tok = newToken(token.LSHIFT, currChar+string(lexer.ch))
 		} else {
-			tok = newToken(token.LT, string(lexer.ch))
+			tok = newToken(token.LT, currChar)
 		}
 	case '!':
 		if lexer.peekChar() == '=' {
 			lexer.readChar()
 			tok = newToken(token.NE, currChar+string(lexer.ch))
 		} else {
-			tok = newToken(token.BANG, string(lexer.ch))
+			tok = newToken(token.BANG, currChar)
 		}
 	case '(':
-		tok = newToken(token.LPAREN, string(lexer.ch))
+		tok = newToken(token.LPAREN, currChar)
 	case ')':
-		tok = newToken(token.RPAREN, string(lexer.ch))
+		tok = newToken(token.RPAREN, currChar)
 	case '{':
-		tok = newToken(token.LBRACE, string(lexer.ch))
+		tok = newToken(token.LBRACE, currChar)
 	case '}':
-		tok = newToken(token.RBRACE, string(lexer.ch))
+		tok = newToken(token.RBRACE, currChar)
 	case ',':
-		tok = newToken(token.COMMA, string(lexer.ch))
+		tok = newToken(token.COMMA, currChar)
 	case ';':
-		tok = newToken(token.SEMICOLON, string(lexer.ch))
+		tok = newToken(token.SEMICOLON, currChar)
 	case 0:
 		tok = newToken(token.EOF, "EOF")
 	default:
@@ -163,7 +163,7 @@ func (lexer *Lexer) skipWhiteSpace() {
 }
 
 func (lexer *Lexer) peekChar() byte {
-	if lexer.nextPosition == 0 {
+	if lexer.nextPosition >= len(lexer.input) {
 		return 0
 	} else {
 		return lexer.input[lexer.nextPosition]
