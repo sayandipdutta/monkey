@@ -75,6 +75,16 @@ func (ident *Identifier) expressionNode()      {}
 func (ident *Identifier) TokenLiteral() string { return ident.Token.Literal }
 func (ident *Identifier) String() string       { return ident.Value }
 
+// IntegerLiteral
+type IntegerLiteral struct {
+	Token token.Token
+	Value int64
+}
+
+func (ident *IntegerLiteral) expressionNode()      {}
+func (ident *IntegerLiteral) String() string       { return string(ident.Value) }
+func (ident *IntegerLiteral) TokenLiteral() string { return ident.Token.Literal }
+
 // ReturnStatement
 type ReturnStatement struct {
 	Value Expression
@@ -103,6 +113,24 @@ type ExpressionStatement struct {
 func (stmt *ExpressionStatement) statementNode()       {}
 func (stmt *ExpressionStatement) TokenLiteral() string { return stmt.Token.Literal }
 func (stmt *ExpressionStatement) String() string {
+	var out bytes.Buffer
+
+	if stmt.Expression != nil {
+		out.WriteString(stmt.Expression.String())
+	}
+	out.WriteString(";")
+	return out.String()
+}
+
+// IntegerExpression
+type IntegerExpression struct {
+	Expression Expression
+	Token      token.Token
+}
+
+func (stmt *IntegerExpression) statementNode()       {}
+func (stmt *IntegerExpression) TokenLiteral() string { return stmt.Token.Literal }
+func (stmt *IntegerExpression) String() string {
 	var out bytes.Buffer
 
 	if stmt.Expression != nil {
