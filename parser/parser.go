@@ -42,6 +42,9 @@ func New(lexer *lexer.Lexer) *Parser {
 	parser.nextToken()
 	parser.nextToken()
 
+	parser.prefixParseFns = make(map[token.TokenType]prefixParseFn)
+	parser.registerPrefixFn(token.IDENT, parser.parseIdentifier)
+
 	return parser
 }
 
@@ -71,6 +74,8 @@ func (parser *Parser) parseStatement() ast.Statement {
 		return parser.parseLetStatement()
 	case token.RETURN:
 		return parser.parseReturnStatement()
+	case token.IDENT:
+		return parser.parseExpressionStatement()
 	default:
 		return nil
 	}
@@ -106,6 +111,33 @@ func (parser *Parser) parseReturnStatement() *ast.ReturnStatement {
 		parser.nextToken()
 	}
 	return retstmt
+}
+
+func (parser *Parser) parseExpressionStatement() *ast.ExpressionStatement {
+	expst := &ast.ExpressionStatement{Token: parser.currToken}
+	expst.Expression = parser.parseExpression(LOWEST)
+
+	if parser.peekTokenIs(token.SEMICOLON) {
+		parser.nextToken()
+	}
+	return expst
+}
+
+func (parser *Parser) parseExpression(precedence int) ast.Expression {
+	prefix := parser.prefixParseFns[parser.currToken.Type]
+	if prefix == nil {
+		return nil
+	}
+
+	leftExp := prefix()
+	return leftExp
+}
+
+func (parser *Parser) parseIdentifier() ast.Expression {
+	return &ast.Identifier{
+		Token: parser.currToken,
+		Value: parser.currToken.Literal,
+	}
 }
 
 func (parser *Parser) peekError(tok token.TokenType) {
