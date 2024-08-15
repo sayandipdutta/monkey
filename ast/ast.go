@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+	"fmt"
 
 	"github.com/sayandipdutta/monkey/token"
 )
@@ -82,7 +83,7 @@ type IntegerLiteral struct {
 }
 
 func (ident *IntegerLiteral) expressionNode()      {}
-func (ident *IntegerLiteral) String() string       { return string(ident.Value) }
+func (ident *IntegerLiteral) String() string       { return fmt.Sprintf("%d", ident.Value) }
 func (ident *IntegerLiteral) TokenLiteral() string { return ident.Token.Literal }
 
 // ReturnStatement
@@ -128,14 +129,19 @@ type IntegerExpression struct {
 	Token      token.Token
 }
 
-func (stmt *IntegerExpression) statementNode()       {}
+func (stmt *IntegerExpression) expressionNode()      {}
 func (stmt *IntegerExpression) TokenLiteral() string { return stmt.Token.Literal }
-func (stmt *IntegerExpression) String() string {
-	var out bytes.Buffer
+func (stmt *IntegerExpression) String() string       { return stmt.TokenLiteral() }
 
-	if stmt.Expression != nil {
-		out.WriteString(stmt.Expression.String())
-	}
-	out.WriteString(";")
-	return out.String()
+// PrefixExpression
+type PrefixExpression struct {
+	Right    Expression
+	Operator string
+	Token    token.Token
+}
+
+func (expr *PrefixExpression) expressionNode()      {}
+func (expr *PrefixExpression) TokenLiteral() string { return expr.Token.Literal }
+func (expr *PrefixExpression) String() string {
+	return fmt.Sprintf("(%s%s)", expr.Operator, expr.Right.String())
 }
