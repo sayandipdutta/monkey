@@ -145,6 +145,8 @@ func (parser *Parser) parseIdentifier() ast.Expression {
 func (parser *Parser) parseIntLiteral() ast.Expression {
 	value, err := strconv.ParseInt(parser.currToken.Literal, 10, 64)
 	if err != nil {
+		msg := fmt.Sprintf("could not parse %q as argument", parser.currToken.Literal)
+		parser.Errors = append(parser.Errors, msg)
 		return nil
 	}
 	return &ast.IntegerLiteral{
