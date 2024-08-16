@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/sayandipdutta/monkey/lexer"
-	"github.com/sayandipdutta/monkey/token"
+	"github.com/sayandipdutta/monkey/parser"
 )
 
 const PROMPT = ">> "
@@ -27,10 +27,9 @@ func Start(in io.Reader, out io.Writer) {
 		if line == "exit" {
 			os.Exit(0)
 		}
-		l := lexer.New(line)
-
-		for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
-			fmt.Printf("%+v\n", tok)
-		}
+		lexer := lexer.New(line)
+		parser := parser.New(lexer)
+		program := parser.ParseProgram()
+		fmt.Println(program.String())
 	}
 }
