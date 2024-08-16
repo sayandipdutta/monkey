@@ -119,7 +119,6 @@ func (stmt *ExpressionStatement) String() string {
 	if stmt.Expression != nil {
 		out.WriteString(stmt.Expression.String())
 	}
-	out.WriteString(";")
 	return out.String()
 }
 
